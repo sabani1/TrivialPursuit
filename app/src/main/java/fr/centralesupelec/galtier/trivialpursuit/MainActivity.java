@@ -2,7 +2,10 @@ package fr.centralesupelec.galtier.trivialpursuit;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
@@ -19,7 +24,6 @@ import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
     TextView t;
-    Button b1, b2, b3, b4;
     int questionId=1;
     Button vraieBouton;
     @Override
@@ -32,49 +36,39 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        b1 = (Button)findViewById(R.id.button1);
-        b2 = (Button)findViewById(R.id.button2);
-        b3 = (Button)findViewById(R.id.button3);
-        b4 = (Button)findViewById(R.id.button4);
+
         show();
     }
 
 public void show(){
-
+    LinearLayout layout = findViewById(R.id.main);//new LinearLayout(this);
     t=findViewById(R.id.textQuestion);
     Quiz Quiz1 = new Quiz();
     Vector<Carte>  get_cartes = Quiz1.getCartes();
+    int nbAnswers = get_cartes.size();
     Carte carte = get_cartes.get(questionId-1);
     System.out.println(carte.getQuestion());
     t.setText(carte.getQuestion());
+
+    if(layout.getChildCount()>2) {
+        layout.removeViews(2, layout.getChildCount()-2 );
+    }
 
     Vector <String> propositions = carte.getMauvaisesReponses();
     propositions.add(carte.getBonneReponse());
     Collections.shuffle(propositions);
 
-    b1.setText(propositions.get(0));
-    b2.setText(propositions.get(1));
-    b3.setText(propositions.get(2));
-    b4.setText(propositions.get(3));
-    int number = 0;
-    for (int i = 0; i<propositions.size();i++) {
+    for (int i=0; i<propositions.toArray().length; i++){
+        MaterialButton bouton = new MaterialButton(this);
+        bouton.setText(propositions.get(i));
+        bouton.setId(i);
+        layout.addView(bouton);
         if (propositions.get(i).equals(carte.getBonneReponse())) {
-            number = i;
+            vraieBouton = bouton;
         }
+        bouton.setOnClickListener(this::tirer);
     }
 
-    if (number == 0){
-        vraieBouton = b1;
-    }
-    else if (number == 1){
-        vraieBouton = b2;
-    }
-    else if (number == 2){
-        vraieBouton = b3;
-    }
-    else{
-        vraieBouton = b4;
-    }
 }
 
 public void tirer(View view) {
