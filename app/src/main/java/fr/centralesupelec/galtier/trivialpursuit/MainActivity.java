@@ -1,5 +1,6 @@
 package fr.centralesupelec.galtier.trivialpursuit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     TextView t;
     int questionId=1;
     Button vraieBouton;
+    int points = 0 ;
+    int essaie = 0;
+    int totalPoints;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,11 +45,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 public void show(){
+    essaie = 0;
     LinearLayout layout = findViewById(R.id.main);//new LinearLayout(this);
     t=findViewById(R.id.textQuestion);
     Quiz Quiz1 = new Quiz();
     Vector<Carte>  get_cartes = Quiz1.getCartes();
     int nbAnswers = get_cartes.size();
+    int nbQuestions = Quiz1.getNbCartes();
     Carte carte = get_cartes.get(questionId-1);
     System.out.println(carte.getQuestion());
     t.setText(carte.getQuestion());
@@ -78,16 +84,30 @@ public void tirer(View view) {
         Toast toast = new Toast(getApplicationContext());
         toast.setText("Bravo");
         toast.show();
+        Quiz Quiz1 = new Quiz();
+        int nbQuestions = Quiz1.getNbCartes();
 
-        if(questionId < 3) {
+        if(essaie == 0){
+            points += 2;
+        }
+        else if(essaie == 1){
+            points += 1;
+        }
+
+        if(questionId < nbQuestions) {
             questionId += 1;
         }
         else{
-            questionId=1;
+            Intent intentPoints = new Intent(this, PointsActivity.class);
+            intentPoints.putExtra("p",points);
+            totalPoints = nbQuestions * 2;
+            intentPoints.putExtra("q",totalPoints);
+            startActivity(intentPoints);
         }
         show();
     }
     else{
+        essaie += 1;
         Toast toast = new Toast(getApplicationContext());
         toast.setText("Mauvaise réponse...");
         toast.show();

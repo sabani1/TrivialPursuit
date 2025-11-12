@@ -1,0 +1,26 @@
+package fr.centralesupelec.galtier.trivialpursuit;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class PointsActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_points);
+        Intent appelant = getIntent();
+        int points = appelant.getIntExtra("p",0);
+        int totalPoints = appelant.getIntExtra("q", 0);
+        TextView tv = findViewById(R.id.textView);
+        tv.setText("Vous avez marqué "+ points +" points sur " + totalPoints);
+    }
+}
