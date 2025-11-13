@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     int points = 0 ;
     int essaie = 0;
     int totalPoints;
+
+    int totalSearch = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +105,7 @@ public void tirer(View view) {
             intentPoints.putExtra("p",points);
             totalPoints = nbQuestions * 2;
             intentPoints.putExtra("q",totalPoints);
+            intentPoints.putExtra("r", totalSearch);
             startActivity(intentPoints);
         }
         show();
@@ -118,19 +121,14 @@ public void tirer(View view) {
 }
 
     public void chercher(View view) {
+        totalSearch += 1;
         Button bGoogle = findViewById(R.id.buttonAide);
         Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-
-        if(questionId == 1){
-            intent.putExtra(SearchManager.QUERY, "Quel est le nom de la mascotte  officielle d Android ?");
-        }
-        else if (questionId == 2){
-            intent.putExtra(SearchManager.QUERY, "A quoi est associée chaque nouvelle version d'Android ?");
-        }
-        else{
-            intent.putExtra(SearchManager.QUERY, "En quelle année la première version d'Android (Cupcake) est-elle sortie ?");
-        }
-
+        Quiz Quiz1 = new Quiz();
+        Vector<Carte>  get_cartes = Quiz1.getCartes();
+        Carte carte = get_cartes.get(questionId-1);
+        String question_search = carte.getQuestion();
+        intent.putExtra(SearchManager.QUERY, question_search);
         startActivity(intent);
     }
 }
