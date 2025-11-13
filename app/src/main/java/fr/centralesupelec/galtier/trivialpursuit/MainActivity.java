@@ -2,7 +2,9 @@ package fr.centralesupelec.galtier.trivialpursuit;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,8 +12,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.Activity;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -47,7 +51,13 @@ public class MainActivity extends AppCompatActivity {
         show();
     }
 
-public void show(){
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.i("Cycle", "La langue était changée");
+    }
+
+    public void show(){
     essaie = 0;
     LinearLayout layout = findViewById(R.id.main);//new LinearLayout(this);
     t=findViewById(R.id.textQuestion);
