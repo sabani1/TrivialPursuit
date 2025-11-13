@@ -33,9 +33,12 @@ public class PointsActivity extends AppCompatActivity {
 
         TextView tv = findViewById(R.id.textView);
         TextView tvR = findViewById(R.id.textViewRecord);
+        TextView tvC = findViewById(R.id.textView2);
+
         Intent appelant = getIntent();
         int points = appelant.getIntExtra("p",0);
         int totalPoints = appelant.getIntExtra("q", 0);
+        int totalSearch = appelant.getIntExtra("r", 0);
         Button bouton = findViewById(R.id.buttonEnregistrer);
         EditText et = findViewById(R.id.editTextNom);
         et.setVisibility(VISIBLE);
@@ -66,6 +69,7 @@ public class PointsActivity extends AppCompatActivity {
         }
 
         tv.setText("Vous avez marqué "+ points +" points sur " + totalPoints+"\nScore: " + score);
+        tvC.setText("Vous avez utilisé Google " + totalSearch+ " fois.");
     }
 
     public void enregistrer(View view) {
