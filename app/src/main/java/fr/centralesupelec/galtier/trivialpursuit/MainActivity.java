@@ -1,5 +1,6 @@
 package fr.centralesupelec.galtier.trivialpursuit;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -56,8 +57,8 @@ public void show(){
     System.out.println(carte.getQuestion());
     t.setText(carte.getQuestion());
 
-    if(layout.getChildCount()>2) {
-        layout.removeViews(2, layout.getChildCount()-2 );
+    if(layout.getChildCount()>3) {
+        layout.removeViews(3, layout.getChildCount()-3);
     }
 
     Vector <String> propositions = carte.getMauvaisesReponses();
@@ -115,4 +116,21 @@ public void tirer(View view) {
 
 
 }
+
+    public void chercher(View view) {
+        Button bGoogle = findViewById(R.id.buttonAide);
+        Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+
+        if(questionId == 1){
+            intent.putExtra(SearchManager.QUERY, "Quel est le nom de la mascotte  officielle d Android ?");
+        }
+        else if (questionId == 2){
+            intent.putExtra(SearchManager.QUERY, "A quoi est associée chaque nouvelle version d'Android ?");
+        }
+        else{
+            intent.putExtra(SearchManager.QUERY, "En quelle année la première version d'Android (Cupcake) est-elle sortie ?");
+        }
+
+        startActivity(intent);
+    }
 }

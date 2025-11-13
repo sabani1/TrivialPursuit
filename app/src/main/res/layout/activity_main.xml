@@ -23,6 +23,14 @@
         android:layout_height="wrap_content"
         android:text="La prochaine question" />
 
+    <Button
+        android:id="@+id/buttonAide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="chercher"
+        android:text="Chercher de l'aide"
+        android:backgroundTint="#FFEB3B"
+        />
 
 
 </LinearLayout>
