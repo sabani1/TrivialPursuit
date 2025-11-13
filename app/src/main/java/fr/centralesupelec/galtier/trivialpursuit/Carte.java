@@ -1,8 +1,9 @@
 package fr.centralesupelec.galtier.trivialpursuit;
 
 import java.util.Vector;
+import java.io.Serializable;
 
-public class Carte {
+public class Carte implements  Serializable{
     private String question;
     private String bonneReponse;
     private Vector<String> mauvaisesReponses;

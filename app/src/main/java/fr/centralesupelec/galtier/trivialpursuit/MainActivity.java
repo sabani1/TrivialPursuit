@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
+import java.io.Serializable;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -20,6 +21,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -37,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     int totalPoints;
 
     int totalSearch = 0;
+
+    Quiz Quiz1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        Intent mIntent = getIntent();
+        Quiz1 =  mIntent.getSerializableExtra("s", Quiz.class);
+        assert Quiz1 != null;
+
         show();
     }
 
@@ -58,35 +72,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void show(){
-    essaie = 0;
-    LinearLayout layout = findViewById(R.id.main);//new LinearLayout(this);
-    t=findViewById(R.id.textQuestion);
-    Quiz Quiz1 = new Quiz();
-    Vector<Carte>  get_cartes = Quiz1.getCartes();
-    int nbAnswers = get_cartes.size();
-    int nbQuestions = Quiz1.getNbCartes();
-    Carte carte = get_cartes.get(questionId-1);
-    System.out.println(carte.getQuestion());
-    t.setText(carte.getQuestion());
+        essaie = 0;
+        LinearLayout layout = findViewById(R.id.main);//new LinearLayout(this);
+        t=findViewById(R.id.textQuestion);
+        Vector<Carte>  get_cartes = Quiz1.getCartes();
+        int nbAnswers = get_cartes.size();
+        int nbQuestions = Quiz1.getNbCartes();
+        Carte carte = get_cartes.get(questionId-1);
+        System.out.println(carte.getQuestion());
+        t.setText(carte.getQuestion());
 
-    if(layout.getChildCount()>3) {
-        layout.removeViews(3, layout.getChildCount()-3);
-    }
-
-    Vector <String> propositions = carte.getMauvaisesReponses();
-    propositions.add(carte.getBonneReponse());
-    Collections.shuffle(propositions);
-
-    for (int i=0; i<propositions.toArray().length; i++){
-        MaterialButton bouton = new MaterialButton(this);
-        bouton.setText(propositions.get(i));
-        bouton.setId(i);
-        layout.addView(bouton);
-        if (propositions.get(i).equals(carte.getBonneReponse())) {
-            vraieBouton = bouton;
+        if(layout.getChildCount()>3) {
+            layout.removeViews(3, layout.getChildCount()-3);
         }
-        bouton.setOnClickListener(this::tirer);
-    }
+
+        Vector <String> propositions = carte.getMauvaisesReponses();
+        propositions.add(carte.getBonneReponse());
+        Collections.shuffle(propositions);
+
+        for (int i=0; i<propositions.toArray().length; i++){
+            MaterialButton bouton = new MaterialButton(this);
+            bouton.setText(propositions.get(i));
+            bouton.setId(i);
+            layout.addView(bouton);
+            if (propositions.get(i).equals(carte.getBonneReponse())) {
+                vraieBouton = bouton;
+            }
+            bouton.setOnClickListener(this::tirer);
+        }
 
 }
 
@@ -96,8 +109,8 @@ public void tirer(View view) {
     if(view.getId()==vraieBouton.getId()){
         Toast toast = new Toast(getApplicationContext());
         toast.setText("Bravo");
+        Vector<Carte>  get_cartes = Quiz1.getCartes();
         toast.show();
-        Quiz Quiz1 = new Quiz();
         int nbQuestions = Quiz1.getNbCartes();
 
         if(essaie == 0){
@@ -134,7 +147,6 @@ public void tirer(View view) {
         totalSearch += 1;
         Button bGoogle = findViewById(R.id.buttonAide);
         Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-        Quiz Quiz1 = new Quiz();
         Vector<Carte>  get_cartes = Quiz1.getCartes();
         Carte carte = get_cartes.get(questionId-1);
         String question_search = carte.getQuestion();

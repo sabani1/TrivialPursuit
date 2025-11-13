@@ -1,12 +1,20 @@
 package fr.centralesupelec.galtier.trivialpursuit;
 
 import java.util.Vector;
+import java.io.Serializable;
 
-public class Quiz {
+public class Quiz implements Serializable{
     private Vector<Carte> cartes;
 
     public Quiz() {
         cartes = new Vector<Carte>();
+    }
+
+    public void ajouterCarte(Carte carte){
+        cartes.add(carte);
+    }
+
+    public void creerQuizDefaut(){
 
         Carte c1 = new Carte();
         c1.setQuestion("Quel est le nom de la mascotte officielle d'Android ?");
@@ -31,6 +39,7 @@ public class Quiz {
         c3.addMauvaiseReponse("2010");
         c3.addMauvaiseReponse("2011");
         cartes.add(c3);
+
     }
 
     public Vector<Carte> getCartes() {
