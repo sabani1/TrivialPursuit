@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
 
 import com.android.volley.Response;
 import android.os.Bundle;
@@ -32,16 +33,29 @@ public class QuestionResponse implements Response.Listener<String> {
 
             for (int i = 0; i < results.length(); i++) {
                 JSONObject questionObject = results.getJSONObject(i);
-                String question = questionObject.getString("question");
-                String correctAnswer = questionObject.getString("correct_answer");
+                String questionHTML = questionObject.getString("question");
+                String correctAnswerHTML = questionObject.getString("correct_answer");
                 JSONArray incorrectAnswers = questionObject.getJSONArray("incorrect_answers");
+
+                String question = HtmlCompat.fromHtml(
+                        questionHTML,
+                        HtmlCompat.FROM_HTML_MODE_COMPACT
+                ).toString();
+
+                String correctAnswer = HtmlCompat.fromHtml(
+                        correctAnswerHTML,
+                        HtmlCompat.FROM_HTML_MODE_COMPACT
+                ).toString();
 
                 Carte carte = new Carte();
                 carte.setQuestion(question);
                 carte.setBonneReponse(correctAnswer);
 
                 for (int j = 0; j < incorrectAnswers.length(); j++) {
-                    carte.addMauvaiseReponse(incorrectAnswers.getString(j));
+                    carte.addMauvaiseReponse(HtmlCompat.fromHtml(
+                            incorrectAnswers.getString(j),
+                            HtmlCompat.FROM_HTML_MODE_COMPACT
+                    ).toString());
                 }
 
                 quiz.ajouterCarte(carte);
