@@ -32,7 +32,7 @@ public class AccueilActivity extends AppCompatActivity {
         //quiz1.creerQuizDefaut();
 
         requestQueue = Volley.newRequestQueue(getApplicationContext());;
-        Response.Listener<String> responseListenerQ = new QuestionResponse();
+        Response.Listener<String> responseListenerQ = new QuestionResponse(quiz1, this);
         Response.ErrorListener errorListenerQ = new QuestionResponseError();
         StringRequest request = new StringRequest(Request.Method.GET,
                 "https://opentdb.com/api.php?amount=10",
@@ -41,8 +41,5 @@ public class AccueilActivity extends AppCompatActivity {
         );
         requestQueue.add(request);
 
-        Intent intentQuiz = new Intent(AccueilActivity.this, MainActivity.class);
-        intentQuiz.putExtra("s", quiz1);
-        startActivity(intentQuiz);
     }
 }

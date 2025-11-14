@@ -1,21 +1,26 @@
 package fr.centralesupelec.galtier.trivialpursuit;
 
-import android.util.Log;
-
-import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.content.Context;
+import android.content.Intent;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.List;
+import com.android.volley.Response;
+import android.os.Bundle;
+import android.util.Log;
 
 public class QuestionResponse implements Response.Listener<String> {
 
-    Carte carte1;
-    Quiz quiz1;
-    public QuestionResponse(){
+    private Quiz quiz;
+    private Context context;
+
+    public QuestionResponse(Quiz quiz, Context context) {
+        this.quiz = quiz;
+        this.context = context;
+
     }
 
     @Override
@@ -23,25 +28,31 @@ public class QuestionResponse implements Response.Listener<String> {
         Log.i("carte", response);
         try {
             JSONObject jsonResponse = new JSONObject(response);
-            String question = jsonResponse.getString("question");
-            String bonneReponse = jsonResponse.getString("correct_answer");
-            JSONArray mauvaisesReponses = jsonResponse.getJSONArray("incorrect_answers");
-            carte1.setQuestion(question);
-            carte1.setBonneReponse(bonneReponse);
-            int ItemsThisPage = mauvaisesReponses.length();
-            System.out.println("abc Items" + ItemsThisPage);
+            JSONArray results = jsonResponse.getJSONArray("results");
 
-            for(int i=0; i<ItemsThisPage; i++){
-                carte1.addMauvaiseReponse(mauvaisesReponses.getString(i));
-                System.out.println("abc ajoute reponse" + i);
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject questionObject = results.getJSONObject(i);
+                String question = questionObject.getString("question");
+                String correctAnswer = questionObject.getString("correct_answer");
+                JSONArray incorrectAnswers = questionObject.getJSONArray("incorrect_answers");
+
+                Carte carte = new Carte();
+                carte.setQuestion(question);
+                carte.setBonneReponse(correctAnswer);
+
+                for (int j = 0; j < incorrectAnswers.length(); j++) {
+                    carte.addMauvaiseReponse(incorrectAnswers.getString(j));
+                }
+
+                quiz.ajouterCarte(carte);
+                Intent intentQuiz = new Intent(context, MainActivity.class);
+                intentQuiz.putExtra("s", quiz);
+                context.startActivity(intentQuiz);
             }
 
 
-            quiz1.ajouterCarte(carte1);
-
-
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }
